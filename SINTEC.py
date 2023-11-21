@@ -2,7 +2,7 @@
 """
 Created on Mon Aug  7 10:49:35 2023
 
-@author: Utente
+@author: Francesca Boschi
 """
 
 import csv
