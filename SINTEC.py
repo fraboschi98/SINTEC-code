@@ -127,38 +127,19 @@ ppg_mat = scipy.io.loadmat(ppg_file_name)
 ppg=ppg_mat['signal']
 tsppg=ppg_mat['ts']
 
-#Omron
-csv_file_name = input("Enter the Omron .csv file name: ")
+#reference device
+csv_file_name = input("Enter the Reference .csv file name: ")
 
 fs_ecg = float(input("Enter the ECG sampling frequency (Hz): "))
 fs_ppg = float(input("Enter the PPG sampling frequency (Hz): "))
 
-'''
-# Creation of numpy arrays
-ecg_head=np.zeros(len(ecg))
-ts_ecg=np.zeros(len(ecg))
-ppg_head=np.zeros(len(ppg))
-ts_ppg=np.zeros(len(ppg))
-for i in range(len(ecg)):
-    ecg_head[i]=ecg[i]
-    ts_ecg[i]=tsecg[i]
-    
-for i in range(len(ppg)):
-    ppg_head[i]=ppg[i]
-    ts_ppg[i]=tsppg[i] 
-'''
-'''ecg_head=np.squeeze(ecg_mat['signal'])
-ts_ecg=np.squeeze(ecg_mat['ts'])
-
-ppg_head=np.squeeze(ppg_mat['signal'])
-ts_ppg=np.squeeze(ppg_mat['ts'])'''
 
 ecg_head = np.array(ecg).flatten()
 ts_ecg= np.array(tsecg).flatten()
 ppg_head = np.array(ppg).flatten()
 ts_ppg= np.array(tsppg).flatten()
 
-#OMRON
+#Reference device
 with open(csv_file_name) as filecsv:
     reader = csv.reader(filecsv, delimiter=";")
     ts_omron = np.array(list(map(float, [(line[0]) for line in reader])))
@@ -172,7 +153,7 @@ with open(csv_file_name) as filecsv:
     dbp = np.array(list(map(float, [(line[2]) for line in reader])))
 
 
-# Omron's time values correspond to the time in which the device returns the pressure values
+# Reference device's time values correspond to the time in which the device returns the pressure values
 ts_omron=ts_omron-60*np.ones(len(ts_omron)) 
 
 
