@@ -2,7 +2,7 @@
 """
 Created on Mon Aug  7 10:49:35 2023
 
-@author: Francesca Boschi
+@author: Utente
 """
 
 import csv
@@ -326,22 +326,6 @@ ptt = ptt[:min_len]
 hr = hr[:min_len]
 timetable = timetable[:min_len]
    
-# Arrays cleaning
-mean_PTT=np.mean(ptt)
-dev_PTT=np.std(ptt)
-mean_HR=np.mean(hr)
-dev_HR=np.std(hr)
-
-for i in range(len(timetable)):
-    if ptt[i]>mean_PTT+dev_PTT or ptt[i]<mean_PTT-dev_PTT or hr[i]>mean_HR+dev_HR or hr[i]<mean_HR-dev_HR:
-        ptt[i]=0
-        hr[i]=0
-        timetable[i]=0
-
-
-ptt = [x for x in ptt if x != 0]
-hr = [x for x in hr if x != 0]
-timetable = [x for x in timetable if x != 0]
 
 # Creation of the interpolating time array
 n = np.where(ts_ecg == timetable[0])[0][0]
@@ -377,9 +361,26 @@ row4=np.transpose(np.interp(timetable,t_fit,row4))
 sz_train=round(0.7*len(row1))
 ind_train=np.arange(0,sz_train)
 ind_test=np.arange(sz_train,len(row1))
-trainData_PTT=row1[ind_train] 
-testData_PTT = row1[ind_test]
+trainData_PTT=row1[ind_train]                       
 trainData_HR=row2[ind_train] 
+
+# Arrays cleaning
+mean_PTT=np.mean(trainData_PTT)
+dev_PTT=np.std(trainData_PTT)
+mean_HR=np.mean(trainData_HR)
+dev_HR=np.std(trainData_HR)
+
+for i in range(len(ind_train)):
+    if trainData_PTT[i]>mean_PTT+dev_PTT or trainData_PTT[i]<mean_PTT-dev_PTT or trainData_HR[i]>mean_HR+dev_HR or trainData_HR[i]<mean_HR-dev_HR:
+        ind_train[i]=0
+        
+
+ind_train=[x for x in ind_train if x!=0]
+
+
+trainData_PTT=row1[ind_train]                       
+trainData_HR=row2[ind_train] 
+testData_PTT = row1[ind_test]
 testData_HR = row2[ind_test]
 X_train=np.transpose(np.array([trainData_PTT,trainData_HR]))
 X_test=np.transpose(np.array([testData_PTT,testData_HR]))
